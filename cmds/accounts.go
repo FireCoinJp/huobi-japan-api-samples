@@ -44,7 +44,6 @@ func (a *AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inte
 		err = h.Do(req, api.PrintMsg)
 	}
 
-	// 也可以存储到文件
 	if err != nil {
 		panic(err)
 	}
