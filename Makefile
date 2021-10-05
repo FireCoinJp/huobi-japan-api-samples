@@ -41,4 +41,4 @@ place:
 fee:
 		./api -action fee
 build:
-		go build -o pkg/api-sample *.go
+		go build -o api-test *.go

@@ -10,26 +10,27 @@ import (
 )
 
 type AccountsCmd struct {
-
+	isSave bool
 }
 
-func (a AccountsCmd) Name() string {
+func (a *AccountsCmd) Name() string {
 	return "accounts"
 }
 
-func (a AccountsCmd) Synopsis() string {
-	return "查询用户余额"
+func (a *AccountsCmd) Synopsis() string {
+	return "查询用户账户状态"
 }
 
-func (a AccountsCmd) Usage() string {
-	return "api-test accounts"
+func (a *AccountsCmd) Usage() string {
+	return "api-test accounts -save"
 }
 
-func (a AccountsCmd) SetFlags(set *flag.FlagSet) {
+func (a *AccountsCmd) SetFlags(set *flag.FlagSet) {
+	set.BoolVar(&a.isSave, "save", false, "write to json")
 	return
 }
 
-func (a AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
+func (a *AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/account/accounts"), nil)
 	err := h.Auth(req)
@@ -37,7 +38,13 @@ func (a AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inter
 		panic(err)
 	}
 
-	err = h.Do(req, api.PrintMsg)
+	if a.isSave {
+		err = h.Do(req, api.SaveMsg)
+	} else {
+		err = h.Do(req, api.PrintMsg)
+	}
+
+	// 也可以存储到文件
 	if err != nil {
 		panic(err)
 	}

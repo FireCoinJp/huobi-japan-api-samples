@@ -6,16 +6,8 @@ import (
 	"github.com/google/subcommands"
 	"huobi-japan-api-samples/cmds"
 	"huobi-japan-api-samples/config"
-	"huobi-japan-api-samples/core/api"
 	"os"
 )
-
-var (
-	cnf *config.Config
-	h *api.Client
-
-)
-
 
 func init() {
 	pwd, _ := os.Getwd()
