@@ -1,0 +1,214 @@
+{
+  "data": {
+    "id": 12698099,
+    "list": [
+      {
+        "balance": "0",
+        "currency": "xem",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "xem",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "bch",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "bch",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "lsk",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "lsk",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "mona",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "mona",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "ht",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "ht",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "qtum",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "qtum",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "btc",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "btc",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "1024.267678319999999826",
+        "currency": "jpy",
+        "seq-num": "92910",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "jpy",
+        "seq-num": "92910",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "bcha",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "bcha",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "bat",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "bat",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "ont",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "ont",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "etc",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "etc",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "25.7559089676516165",
+        "currency": "xrp",
+        "seq-num": "61623",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "xrp",
+        "seq-num": "61623",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "eth",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "eth",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "xlm",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "xlm",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "ltc",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "ltc",
+        "seq-num": "0",
+        "type": "frozen"
+      },
+      {
+        "balance": "0",
+        "currency": "trx",
+        "seq-num": "0",
+        "type": "trade"
+      },
+      {
+        "balance": "0",
+        "currency": "trx",
+        "seq-num": "0",
+        "type": "frozen"
+      }
+    ],
+    "state": "working",
+    "type": "spot"
+  },
+  "status": "ok"
+}
