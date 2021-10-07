@@ -24,9 +24,32 @@ func main() {
 	subcommands.Register(subcommands.HelpCommand(), "")
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
-	subcommands.Register(&cmds.AccountsCmd{}, "")
-	subcommands.Register(&cmds.CurrencysCmd{}, "")
-	subcommands.Register(&cmds.SymbolsCmd{}, "")
+
+	subcommands.Register(&cmds.SymbolsCmd{}, "システム情報関連")
+	subcommands.Register(&cmds.CurrencysCmd{}, "システム情報関連")
+	subcommands.Register(&cmds.TimestampCmd{}, "システム情報関連")
+
+	subcommands.Register(&cmds.KLineCmd{}, "マーケット関連")
+	subcommands.Register(&cmds.MergeCmd{}, "マーケット関連")
+	subcommands.Register(&cmds.TickersCmd{}, "マーケット関連")
+	subcommands.Register(&cmds.DepthCmd{}, "マーケット関連")
+	subcommands.Register(&cmds.TradeCmd{}, "マーケット関連")
+	subcommands.Register(&cmds.HistoryTradeCmd{}, "マーケット関連")
+
+	subcommands.Register(&cmds.AccountsCmd{}, "アカウント関連")
+	subcommands.Register(&cmds.BalanceCmd{}, "アカウント関連")
+
+	subcommands.Register(&cmds.PlaceCmd{}, "取引関連")
+	subcommands.Register(&cmds.OpenOrdersCmd{}, "取引関連")
+	subcommands.Register(&cmds.SubmitcancelCmd{}, "取引関連")
+
+	subcommands.Register(&cmds.OrderCmd{}, "取引関連")
+	subcommands.Register(&cmds.MatchresultsCmd{}, "取引関連")
+	subcommands.Register(&cmds.GetOrderCmd{}, "取引関連")
+	subcommands.Register(&cmds.GetMatchresultsCmd{}, "取引関連")
+
+	subcommands.Register(&cmds.OrderlistCmd{}, "販売所関連")
+	subcommands.Register(&cmds.MaintainTimeCmd{}, "販売所関連")
 
 	flag.Parse()
 	ctx := context.Background()

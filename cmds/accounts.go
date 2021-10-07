@@ -1,12 +1,15 @@
 package cmds
 
+// ユーザアカウント
+
 import (
 	"context"
 	"flag"
-	"github.com/google/subcommands"
 	"huobi-japan-api-samples/config"
 	"huobi-japan-api-samples/core/api"
 	"net/http"
+
+	"github.com/google/subcommands"
 )
 
 type AccountsCmd struct {
@@ -49,4 +52,3 @@ func (a *AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inte
 	}
 	return 0
 }
-

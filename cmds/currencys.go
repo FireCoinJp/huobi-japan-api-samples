@@ -1,5 +1,7 @@
 package cmds
 
+// 対応取引通貨
+
 import (
 	"context"
 	"flag"
@@ -34,10 +36,8 @@ func (a *CurrencysCmd) SetFlags(set *flag.FlagSet) {
 func (a *CurrencysCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/common/currencys"), nil)
-	err := h.Auth(req)
-	if err != nil {
-		panic(err)
-	}
+
+	var err error
 
 	if a.isSave {
 		err = h.Do(req, api.SaveMsg)
