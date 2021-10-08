@@ -23,7 +23,7 @@ func (a *OrderCmd) Name() string {
 }
 
 func (a *OrderCmd) Synopsis() string {
-	return "OrderCmd"
+	return "注文の照会"
 }
 
 func (a *OrderCmd) Usage() string {
@@ -31,9 +31,8 @@ func (a *OrderCmd) Usage() string {
 }
 
 func (a *OrderCmd) SetFlags(set *flag.FlagSet) {
+	set.StringVar(&a.orderId, "order_id", "375977348044411", "注文ID")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	set.StringVar(&a.orderId, "order_id", "375977348044411", "order_id success")
-	return
 }
 
 func (a *OrderCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -44,14 +43,6 @@ func (a *OrderCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

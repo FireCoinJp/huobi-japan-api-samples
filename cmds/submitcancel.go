@@ -23,7 +23,7 @@ func (a *SubmitcancelCmd) Name() string {
 }
 
 func (a *SubmitcancelCmd) Synopsis() string {
-	return "SubmitcancelCmd"
+	return "注文キャンセル"
 }
 
 func (a *SubmitcancelCmd) Usage() string {
@@ -31,27 +31,18 @@ func (a *SubmitcancelCmd) Usage() string {
 }
 
 func (a *SubmitcancelCmd) SetFlags(set *flag.FlagSet) {
+	set.StringVar(&a.orderId, "order_id", "376058608563423", "注文ID")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	set.StringVar(&a.orderId, "order_id", "376058608563423", "order_id success")
-	return
 }
 
 func (a *SubmitcancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
-	req, _ := http.NewRequest(http.MethodPost, h.Url(fmt.Sprintf("/v1/order/%s/submitcancel", a.orderId)), nil)
+	req, _ := http.NewRequest(http.MethodPost, h.Url(fmt.Sprintf("/v1/order/orders/%s/submitcancel", a.orderId)), nil)
 	err := h.Auth(req)
 	if err != nil {
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

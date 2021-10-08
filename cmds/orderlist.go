@@ -32,7 +32,7 @@ func (a *OrderlistCmd) Name() string {
 }
 
 func (a *OrderlistCmd) Synopsis() string {
-	return "OrderlistCmd"
+	return "販売所注文履歴"
 }
 
 func (a *OrderlistCmd) Usage() string {
@@ -40,18 +40,17 @@ func (a *OrderlistCmd) Usage() string {
 }
 
 func (a *OrderlistCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.states, "states", "1", "states success")
-	set.StringVar(&a.direct, "direct", "1", "direct success")
+	set.StringVar(&a.states, "states", "1", "成約状態, 1: 進行中, 2: 完全約定, 3: 未成約")
+	set.StringVar(&a.direct, "direct", "1", "注文方向, 1:next, 2:previous")
 
-	set.StringVar(&a.id, "id", "", "id success")
-	set.StringVar(&a.limit, "limit", "", "limit success")
-	set.StringVar(&a.from, "from", "", "from success")
-	set.StringVar(&a.base_currency, "base_currency", "", "base_currency success")
-	set.StringVar(&a.quote_currency, "quote_currency", "", "quote_currency success")
-	set.StringVar(&a.symbol, "symbol", "btcjpy", "symbol success")
-	set.StringVar(&a.ordertype, "ordertype", "", "types success")
+	set.StringVar(&a.id, "id", "", "注文番号")
+	set.StringVar(&a.limit, "limit", "", "表示件数, default=10, max: 100")
+	set.StringVar(&a.from, "from", "", "開始ID, １ページ以後必要")
+	set.StringVar(&a.base_currency, "base_currency", "", "基礎通貨")
+	set.StringVar(&a.quote_currency, "quote_currency", "", "通貨単位")
+	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア")
+	set.StringVar(&a.ordertype, "ordertype", "", "取引タイプ, 1:buy, 2:sell")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *OrderlistCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -60,14 +59,25 @@ func (a *OrderlistCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...int
 	param := url.Values{}
 	param.Add("states", a.states)
 	param.Add("direct", a.direct)
-
-	param.Add("id", a.id)
-	param.Add("limit", a.limit)
-	param.Add("from", a.from)
-	param.Add("start_date", a.base_currency)
-	param.Add("end_date", a.quote_currency)
 	param.Add("symbol", a.symbol)
-	param.Add("types", a.ordertype)
+	if a.id != "" {
+		param.Add("id", a.id)
+	}
+	if a.limit != "" {
+		param.Add("limit", a.limit)
+	}
+	if a.from != "" {
+		param.Add("from", a.from)
+	}
+	if a.base_currency != "" {
+		param.Add("start_date", a.base_currency)
+	}
+	if a.quote_currency != "" {
+		param.Add("end_date", a.quote_currency)
+	}
+	if a.ordertype != "" {
+		param.Add("types", a.ordertype)
+	}
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/retail/order/list")+"?"+param.Encode(), nil)
 	err := h.Auth(req)
@@ -75,14 +85,6 @@ func (a *OrderlistCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...int
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

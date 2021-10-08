@@ -25,7 +25,7 @@ func (a *KLineCmd) Name() string {
 }
 
 func (a *KLineCmd) Synopsis() string {
-	return "KLineCmd"
+	return "ローソク足"
 }
 
 func (a *KLineCmd) Usage() string {
@@ -33,11 +33,10 @@ func (a *KLineCmd) Usage() string {
 }
 
 func (a *KLineCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.symbol, "symbol", "btcjpy", "symbol success")
-	set.StringVar(&a.period, "period", "1day", "period success")
-	set.StringVar(&a.size, "size", "20", "size success")
+	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア - btceth")
+	set.StringVar(&a.period, "period", "1day", "チャートタイプ")
+	set.StringVar(&a.size, "size", "20", "サイズ - default=150 max=2000")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *KLineCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -50,15 +49,6 @@ func (a *KLineCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/history/kline")+"?"+param.Encode(), nil)
 
-	var err error
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

@@ -21,7 +21,7 @@ func (a *TimestampCmd) Name() string {
 }
 
 func (a *TimestampCmd) Synopsis() string {
-	return "TimestampCmd"
+	return "システム時間を調べる"
 }
 
 func (a *TimestampCmd) Usage() string {
@@ -30,23 +30,12 @@ func (a *TimestampCmd) Usage() string {
 
 func (a *TimestampCmd) SetFlags(set *flag.FlagSet) {
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *TimestampCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/common/timestamp"), nil)
 
-	var err error
-
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

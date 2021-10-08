@@ -21,7 +21,7 @@ func (a *TickersCmd) Name() string {
 }
 
 func (a *TickersCmd) Synopsis() string {
-	return "TickersCmd"
+	return "全取引ペアの相場情報"
 }
 
 func (a *TickersCmd) Usage() string {
@@ -30,7 +30,6 @@ func (a *TickersCmd) Usage() string {
 
 func (a *TickersCmd) SetFlags(set *flag.FlagSet) {
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *TickersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -38,16 +37,6 @@ func (a *TickersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inter
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/tickers"), nil)
 
-	var err error
-
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

@@ -23,7 +23,7 @@ func (a *MatchresultsCmd) Name() string {
 }
 
 func (a *MatchresultsCmd) Synopsis() string {
-	return "MatchresultsCmd"
+	return "注文の約定詳細"
 }
 
 func (a *MatchresultsCmd) Usage() string {
@@ -31,9 +31,8 @@ func (a *MatchresultsCmd) Usage() string {
 }
 
 func (a *MatchresultsCmd) SetFlags(set *flag.FlagSet) {
+	set.StringVar(&a.orderId, "order_id", "375977348044411", "パスに記載された注文ID")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	set.StringVar(&a.orderId, "order_id", "375977348044411", "order_id success")
-	return
 }
 
 func (a *MatchresultsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -44,14 +43,6 @@ func (a *MatchresultsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

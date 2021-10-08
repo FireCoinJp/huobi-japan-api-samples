@@ -1,6 +1,6 @@
 package cmds
 
-// 販売所注文履歴
+// 販売所メンテナンス時間
 
 import (
 	"context"
@@ -21,7 +21,7 @@ func (a *MaintainTimeCmd) Name() string {
 }
 
 func (a *MaintainTimeCmd) Synopsis() string {
-	return "MaintainTimeCmd"
+	return "販売所メンテナンス時間"
 }
 
 func (a *MaintainTimeCmd) Usage() string {
@@ -30,7 +30,6 @@ func (a *MaintainTimeCmd) Usage() string {
 
 func (a *MaintainTimeCmd) SetFlags(set *flag.FlagSet) {
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *MaintainTimeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -42,14 +41,6 @@ func (a *MaintainTimeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

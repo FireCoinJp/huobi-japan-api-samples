@@ -14,8 +14,7 @@ import (
 )
 
 type BalanceCmd struct {
-	isSave    bool
-	accountId string
+	isSave bool
 }
 
 func (a *BalanceCmd) Name() string {
@@ -23,7 +22,7 @@ func (a *BalanceCmd) Name() string {
 }
 
 func (a *BalanceCmd) Synopsis() string {
-	return "BalanceCmd"
+	return "残高照合"
 }
 
 func (a *BalanceCmd) Usage() string {
@@ -32,26 +31,16 @@ func (a *BalanceCmd) Usage() string {
 
 func (a *BalanceCmd) SetFlags(set *flag.FlagSet) {
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	set.StringVar(&a.accountId, "account_id", config.Cfg.AccountID, "account_id success")
-	return
 }
 
 func (a *BalanceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
-	req, _ := http.NewRequest(http.MethodGet, h.Url(fmt.Sprintf("/v1/account/accounts/%s/balance", a.accountId)), nil)
+	req, _ := http.NewRequest(http.MethodGet, h.Url(fmt.Sprintf("/v1/account/accounts/%s/balance", config.Cfg.AccountID)), nil)
 	err := h.Auth(req)
 	if err != nil {
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

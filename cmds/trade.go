@@ -23,7 +23,7 @@ func (a *TradeCmd) Name() string {
 }
 
 func (a *TradeCmd) Synopsis() string {
-	return "TradeCmd"
+	return "最新の取引データ"
 }
 
 func (a *TradeCmd) Usage() string {
@@ -31,9 +31,8 @@ func (a *TradeCmd) Usage() string {
 }
 
 func (a *TradeCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.symbol, "symbol", "btcjpy", "symbol success")
+	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *TradeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -44,16 +43,6 @@ func (a *TradeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/trade")+"?"+param.Encode(), nil)
 
-	var err error
-
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

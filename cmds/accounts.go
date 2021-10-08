@@ -21,7 +21,7 @@ func (a *AccountsCmd) Name() string {
 }
 
 func (a *AccountsCmd) Synopsis() string {
-	return "查询用户账户状态"
+	return "ユーザアカウント"
 }
 
 func (a *AccountsCmd) Usage() string {
@@ -30,7 +30,6 @@ func (a *AccountsCmd) Usage() string {
 
 func (a *AccountsCmd) SetFlags(set *flag.FlagSet) {
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -41,14 +40,6 @@ func (a *AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inte
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

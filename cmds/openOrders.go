@@ -14,11 +14,10 @@ import (
 )
 
 type OpenOrdersCmd struct {
-	accountId string
-	symbol    string
-	side      string
-	size      string
-	isSave    bool
+	symbol string
+	side   string
+	size   string
+	isSave bool
 }
 
 func (a *OpenOrdersCmd) Name() string {
@@ -26,7 +25,7 @@ func (a *OpenOrdersCmd) Name() string {
 }
 
 func (a *OpenOrdersCmd) Synopsis() string {
-	return "OpenOrdersCmd"
+	return "未約定注文一覧"
 }
 
 func (a *OpenOrdersCmd) Usage() string {
@@ -34,19 +33,17 @@ func (a *OpenOrdersCmd) Usage() string {
 }
 
 func (a *OpenOrdersCmd) SetFlags(set *flag.FlagSet) {
+	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引通貨ペア")
+	set.StringVar(&a.side, "side", "buy", "取引方向, Range: {'buy', 'sell'}")
+	set.StringVar(&a.size, "size", "2", "必要な記録数")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	set.StringVar(&a.accountId, "account_id", config.Cfg.AccountID, "account_id success")
-	set.StringVar(&a.symbol, "symbol", "btcjpy", "symbol success")
-	set.StringVar(&a.side, "side", "buy", "side success")
-	set.StringVar(&a.size, "size", "2", "size success")
-	return
 }
 
 func (a *OpenOrdersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 
 	param := url.Values{}
-	param.Add("account-id", a.accountId)
+	param.Add("account-id", config.Cfg.AccountID)
 	param.Add("symbol", a.symbol)
 	param.Add("side", a.side)
 	param.Add("size", a.size)
@@ -57,14 +54,6 @@ func (a *OpenOrdersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...in
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

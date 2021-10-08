@@ -16,13 +16,12 @@ import (
 )
 
 type PlaceCmd struct {
-	accountId string
-	amount    string
-	price     string
-	source    string
-	symbol    string
-	steptype  string
-	isSave    bool
+	amount   string
+	price    string
+	source   string
+	symbol   string
+	steptype string
+	isSave   bool
 }
 
 func (a *PlaceCmd) Name() string {
@@ -30,7 +29,7 @@ func (a *PlaceCmd) Name() string {
 }
 
 func (a *PlaceCmd) Synopsis() string {
-	return "PlaceCmd"
+	return "注文実行"
 }
 
 func (a *PlaceCmd) Usage() string {
@@ -38,20 +37,18 @@ func (a *PlaceCmd) Usage() string {
 }
 
 func (a *PlaceCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.accountId, "account_id", config.Cfg.AccountID, "account-id success")
-	set.StringVar(&a.amount, "amount", "1", "amount success")
-	set.StringVar(&a.price, "price", "9.5", "price success")
-	set.StringVar(&a.source, "source", "api", "source success")
-	set.StringVar(&a.symbol, "symbol", "trxjpy", "symbol success")
-	set.StringVar(&a.steptype, "type", "buy-limit", "type success")
+	set.StringVar(&a.amount, "amount", "1", "取引数量")
+	set.StringVar(&a.price, "price", "9.5", "指値の注文価格")
+	set.StringVar(&a.source, "source", "api", "注文のソース, default: api")
+	set.StringVar(&a.symbol, "symbol", "trxjpy", "取引通貨ペア")
+	set.StringVar(&a.steptype, "type", "buy-limit", "注文タイプ,buy-market：成行買い,sell-market：成行売り,buy-limit：指値買い,sell-limit：指値売り,buy-ioc：IOC買い注文,sell-ioc：IOC売り注文,buy-limit-maker,sell-limit-maker")
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *PlaceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	sendBody := request.PlaceBody{
-		AccountId: a.accountId,
+		AccountId: config.Cfg.AccountID,
 		Amount:    a.amount,
 		Price:     a.price,
 		Source:    "api",
@@ -67,14 +64,6 @@ func (a *PlaceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 		panic(err)
 	}
 
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

@@ -42,12 +42,18 @@ func main() {
 	subcommands.Register(&cmds.PlaceCmd{}, "取引関連")
 	subcommands.Register(&cmds.OpenOrdersCmd{}, "取引関連")
 	subcommands.Register(&cmds.SubmitcancelCmd{}, "取引関連")
-
+	subcommands.Register(&cmds.BatchcancelCmd{}, "取引関連")
+	subcommands.Register(&cmds.BatchCancelOpenOrdersCmd{}, "取引関連")
 	subcommands.Register(&cmds.OrderCmd{}, "取引関連")
 	subcommands.Register(&cmds.MatchresultsCmd{}, "取引関連")
 	subcommands.Register(&cmds.GetOrderCmd{}, "取引関連")
 	subcommands.Register(&cmds.GetMatchresultsCmd{}, "取引関連")
 
+	subcommands.Register(&cmds.CreateCmd{}, "ウォレット関連")
+	subcommands.Register(&cmds.CancelCmd{}, "ウォレット関連")
+	subcommands.Register(&cmds.DepositWithdrawCmd{}, "ウォレット関連")
+
+	subcommands.Register(&cmds.RetailPlaceCmd{}, "販売所関連")
 	subcommands.Register(&cmds.OrderlistCmd{}, "販売所関連")
 	subcommands.Register(&cmds.MaintainTimeCmd{}, "販売所関連")
 

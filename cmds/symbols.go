@@ -21,7 +21,7 @@ func (a *SymbolsCmd) Name() string {
 }
 
 func (a *SymbolsCmd) Synopsis() string {
-	return "SymbolsCmd"
+	return "取引ペア情報"
 }
 
 func (a *SymbolsCmd) Usage() string {
@@ -30,23 +30,12 @@ func (a *SymbolsCmd) Usage() string {
 
 func (a *SymbolsCmd) SetFlags(set *flag.FlagSet) {
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *SymbolsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/common/symbols"), nil)
 
-	var err error
-
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }

@@ -21,7 +21,7 @@ func (a *CurrencysCmd) Name() string {
 }
 
 func (a *CurrencysCmd) Synopsis() string {
-	return "CurrencysCmd"
+	return "対応取引通貨"
 }
 
 func (a *CurrencysCmd) Usage() string {
@@ -30,23 +30,12 @@ func (a *CurrencysCmd) Usage() string {
 
 func (a *CurrencysCmd) SetFlags(set *flag.FlagSet) {
 	set.BoolVar(&a.isSave, "save", false, "write to json")
-	return
 }
 
 func (a *CurrencysCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/common/currencys"), nil)
 
-	var err error
-
-	if a.isSave {
-		err = h.Do(req, api.SaveMsg)
-	} else {
-		err = h.Do(req, api.PrintMsg)
-	}
-
-	if err != nil {
-		panic(err)
-	}
+	apiDo(req, a.isSave)
 	return 0
 }
