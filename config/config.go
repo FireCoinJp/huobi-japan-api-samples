@@ -1,8 +1,9 @@
 package config
 
 import (
-	"go.uber.org/config"
 	"os"
+
+	"go.uber.org/config"
 )
 
 type (
@@ -11,7 +12,7 @@ type (
 		SecretKey string `yaml:"secret_key"`
 		AccountID string `yaml:"account_id"`
 		Host      string `yaml:"host"`
-		Logger    string `yaml:"logger"`
+		Save      bool   `yaml:"save"`
 	}
 )
 
