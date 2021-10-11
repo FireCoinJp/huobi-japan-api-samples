@@ -46,10 +46,10 @@ func (a *BatchcancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...i
 	var orderId_arr []string
 	var clientOrderIds_arr []string
 	if a.orderIds != "" {
-		orderId_arr = strings.Split(a.orderIds, " ")
+		orderId_arr = strings.Split(a.orderIds, ",")
 	}
 	if a.clientOrderIds != "" {
-		clientOrderIds_arr = strings.Split(a.clientOrderIds, " ")
+		clientOrderIds_arr = strings.Split(a.clientOrderIds, ",")
 	}
 
 	sendBody := request.BatchcancelBody{
