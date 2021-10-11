@@ -70,6 +70,16 @@ func (c Client) Do(req *http.Request, handler HandlerResponse) error {
 	return handler(res)
 }
 
+func (c Client) Process(req *http.Request) {
+	err := c.Do(req, PrintMsg)
+	if c.config.Save {
+		err = c.Do(req, SaveMsg)
+	}
+	if err != nil {
+		panic(err)
+	}
+}
+
 var PrintMsg = func(rep *http.Response) error {
 	var iv interface{}
 	err := json.NewDecoder(rep.Body).Decode(&iv)
