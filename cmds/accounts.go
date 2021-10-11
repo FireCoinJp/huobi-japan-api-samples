@@ -13,7 +13,6 @@ import (
 )
 
 type AccountsCmd struct {
-	isSave bool
 }
 
 func (a *AccountsCmd) Name() string {
@@ -25,11 +24,10 @@ func (a *AccountsCmd) Synopsis() string {
 }
 
 func (a *AccountsCmd) Usage() string {
-	return "api-test accounts -save"
+	return "api-test accounts \n"
 }
 
 func (a *AccountsCmd) SetFlags(set *flag.FlagSet) {
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -40,6 +38,6 @@ func (a *AccountsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inte
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

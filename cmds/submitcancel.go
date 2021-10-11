@@ -14,7 +14,6 @@ import (
 )
 
 type SubmitcancelCmd struct {
-	isSave  bool
 	orderId string
 }
 
@@ -27,12 +26,11 @@ func (a *SubmitcancelCmd) Synopsis() string {
 }
 
 func (a *SubmitcancelCmd) Usage() string {
-	return "api-test Submitcancel -save"
+	return "api-test submitcancel \n"
 }
 
 func (a *SubmitcancelCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.orderId, "order_id", "376058608563423", "注文ID")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *SubmitcancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -43,6 +41,6 @@ func (a *SubmitcancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

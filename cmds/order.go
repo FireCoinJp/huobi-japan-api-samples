@@ -14,7 +14,6 @@ import (
 )
 
 type OrderCmd struct {
-	isSave  bool
 	orderId string
 }
 
@@ -27,12 +26,11 @@ func (a *OrderCmd) Synopsis() string {
 }
 
 func (a *OrderCmd) Usage() string {
-	return "api-test order -save"
+	return "api-test order \n"
 }
 
 func (a *OrderCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.orderId, "order_id", "375977348044411", "注文ID")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *OrderCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -43,6 +41,6 @@ func (a *OrderCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

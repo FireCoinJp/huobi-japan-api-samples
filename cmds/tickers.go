@@ -13,7 +13,6 @@ import (
 )
 
 type TickersCmd struct {
-	isSave bool
 }
 
 func (a *TickersCmd) Name() string {
@@ -25,11 +24,10 @@ func (a *TickersCmd) Synopsis() string {
 }
 
 func (a *TickersCmd) Usage() string {
-	return "api-test TickersCmd -save"
+	return "api-test tickers \n"
 }
 
 func (a *TickersCmd) SetFlags(set *flag.FlagSet) {
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *TickersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -37,6 +35,6 @@ func (a *TickersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inter
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/tickers"), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

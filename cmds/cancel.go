@@ -1,6 +1,6 @@
 package cmds
 
-// 注文キャンセル
+// 暗号資産の出金のキャンセル
 
 import (
 	"context"
@@ -14,7 +14,6 @@ import (
 )
 
 type CancelCmd struct {
-	isSave     bool
 	withdrawId string
 }
 
@@ -27,12 +26,11 @@ func (a *CancelCmd) Synopsis() string {
 }
 
 func (a *CancelCmd) Usage() string {
-	return "api-test CancelCmd -save"
+	return "api-test cancel \n"
 }
 
 func (a *CancelCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.withdrawId, "withdraw-id", "75705660", "出金ID，pathの中に記入")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *CancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -43,6 +41,6 @@ func (a *CancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interf
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

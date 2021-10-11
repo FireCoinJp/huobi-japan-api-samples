@@ -20,7 +20,6 @@ type BatchCancelOpenOrdersCmd struct {
 	side   string
 	size   string
 	types  string
-	isSave bool
 }
 
 func (a *BatchCancelOpenOrdersCmd) Name() string {
@@ -32,7 +31,7 @@ func (a *BatchCancelOpenOrdersCmd) Synopsis() string {
 }
 
 func (a *BatchCancelOpenOrdersCmd) Usage() string {
-	return "api-test BatchCancelOpenOrdersCmd -save"
+	return "api-test batchCancelOpenOrders \n"
 }
 
 func (a *BatchCancelOpenOrdersCmd) SetFlags(set *flag.FlagSet) {
@@ -40,7 +39,6 @@ func (a *BatchCancelOpenOrdersCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.side, "side", "", "取引方向 , Range: {“buy”,“sell”}， デフォルトでは、条件が満たされていない全ての注文が返されます。")
 	set.StringVar(&a.size, "size", "", "必要な記録数, default: 100, Range: {0,100}")
 	set.StringVar(&a.types, "types", "", "カンマで区切られた注文タイプの組み合わせ")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *BatchCancelOpenOrdersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -61,6 +59,6 @@ func (a *BatchCancelOpenOrdersCmd) Execute(ctx context.Context, f *flag.FlagSet,
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

@@ -23,8 +23,6 @@ type OrderlistCmd struct {
 	symbol         string
 	ordertype      string
 	states         string
-
-	isSave bool
 }
 
 func (a *OrderlistCmd) Name() string {
@@ -36,7 +34,7 @@ func (a *OrderlistCmd) Synopsis() string {
 }
 
 func (a *OrderlistCmd) Usage() string {
-	return "api-test OrderlistCmd -save"
+	return "api-test orderlist \n"
 }
 
 func (a *OrderlistCmd) SetFlags(set *flag.FlagSet) {
@@ -50,7 +48,6 @@ func (a *OrderlistCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.quote_currency, "quote_currency", "", "通貨単位")
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア")
 	set.StringVar(&a.ordertype, "ordertype", "", "取引タイプ, 1:buy, 2:sell")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *OrderlistCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -85,6 +82,6 @@ func (a *OrderlistCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...int
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

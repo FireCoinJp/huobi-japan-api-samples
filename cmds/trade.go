@@ -15,7 +15,6 @@ import (
 
 type TradeCmd struct {
 	symbol string
-	isSave bool
 }
 
 func (a *TradeCmd) Name() string {
@@ -27,12 +26,11 @@ func (a *TradeCmd) Synopsis() string {
 }
 
 func (a *TradeCmd) Usage() string {
-	return "api-test TradeCmd -save"
+	return "api-test trade \n"
 }
 
 func (a *TradeCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *TradeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -43,6 +41,6 @@ func (a *TradeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/trade")+"?"+param.Encode(), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

@@ -13,7 +13,6 @@ import (
 )
 
 type TimestampCmd struct {
-	isSave bool
 }
 
 func (a *TimestampCmd) Name() string {
@@ -25,17 +24,16 @@ func (a *TimestampCmd) Synopsis() string {
 }
 
 func (a *TimestampCmd) Usage() string {
-	return "api-test TimestampCmd -save"
+	return "api-test timestamp \n"
 }
 
 func (a *TimestampCmd) SetFlags(set *flag.FlagSet) {
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *TimestampCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/common/timestamp"), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

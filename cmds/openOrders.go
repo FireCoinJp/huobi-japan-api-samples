@@ -17,7 +17,6 @@ type OpenOrdersCmd struct {
 	symbol string
 	side   string
 	size   string
-	isSave bool
 }
 
 func (a *OpenOrdersCmd) Name() string {
@@ -29,14 +28,13 @@ func (a *OpenOrdersCmd) Synopsis() string {
 }
 
 func (a *OpenOrdersCmd) Usage() string {
-	return "api-test OpenOrdersCmd -save"
+	return "api-test openOrders \n"
 }
 
 func (a *OpenOrdersCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引通貨ペア")
 	set.StringVar(&a.side, "side", "buy", "取引方向, Range: {'buy', 'sell'}")
 	set.StringVar(&a.size, "size", "2", "必要な記録数")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *OpenOrdersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -54,6 +52,6 @@ func (a *OpenOrdersCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...in
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

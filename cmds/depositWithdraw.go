@@ -18,7 +18,6 @@ type DepositWithdrawCmd struct {
 	types    string
 	from     string
 	size     string
-	isSave   bool
 }
 
 func (a *DepositWithdrawCmd) Name() string {
@@ -30,7 +29,7 @@ func (a *DepositWithdrawCmd) Synopsis() string {
 }
 
 func (a *DepositWithdrawCmd) Usage() string {
-	return "api-test DepositWithdrawCmd -save"
+	return "api-test depositWithdraw \n"
 }
 
 func (a *DepositWithdrawCmd) SetFlags(set *flag.FlagSet) {
@@ -39,7 +38,6 @@ func (a *DepositWithdrawCmd) SetFlags(set *flag.FlagSet) {
 
 	set.StringVar(&a.from, "from", "", "開始照会ID, 注文約定記録ID（最大值）")
 	set.StringVar(&a.size, "size", "10", "記録数")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *DepositWithdrawCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -59,6 +57,6 @@ func (a *DepositWithdrawCmd) Execute(ctx context.Context, f *flag.FlagSet, args 
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

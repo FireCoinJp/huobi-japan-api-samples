@@ -15,7 +15,6 @@ import (
 
 type MergeCmd struct {
 	symbol string
-	isSave bool
 }
 
 func (a *MergeCmd) Name() string {
@@ -27,12 +26,11 @@ func (a *MergeCmd) Synopsis() string {
 }
 
 func (a *MergeCmd) Usage() string {
-	return "api-test MergeCmd -save"
+	return "api-test merge \n"
 }
 
 func (a *MergeCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *MergeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -43,6 +41,6 @@ func (a *MergeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/detail/merged")+"?"+param.Encode(), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

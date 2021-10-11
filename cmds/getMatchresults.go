@@ -22,12 +22,10 @@ type GetMatchresultsCmd struct {
 	from      string
 	direct    string
 	size      string
-
-	isSave bool
 }
 
 func (a *GetMatchresultsCmd) Name() string {
-	return "GetMatchresults"
+	return "getMatchresults"
 }
 
 func (a *GetMatchresultsCmd) Synopsis() string {
@@ -35,7 +33,7 @@ func (a *GetMatchresultsCmd) Synopsis() string {
 }
 
 func (a *GetMatchresultsCmd) Usage() string {
-	return "api-test GetMatchresultsCmd -save"
+	return "api-test getMatchresults \n"
 }
 
 func (a *GetMatchresultsCmd) SetFlags(set *flag.FlagSet) {
@@ -48,7 +46,6 @@ func (a *GetMatchresultsCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.from, "from", "", "開始ID")
 	set.StringVar(&a.direct, "direct", "next", "照会方向,約定IDの新着順 default: next, Range: {'prev', 'next'}")
 	set.StringVar(&a.size, "size", "10", "記録数, Range: [0, 100]")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *GetMatchresultsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -79,6 +76,6 @@ func (a *GetMatchresultsCmd) Execute(ctx context.Context, f *flag.FlagSet, args 
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

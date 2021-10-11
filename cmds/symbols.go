@@ -13,7 +13,6 @@ import (
 )
 
 type SymbolsCmd struct {
-	isSave bool
 }
 
 func (a *SymbolsCmd) Name() string {
@@ -25,17 +24,16 @@ func (a *SymbolsCmd) Synopsis() string {
 }
 
 func (a *SymbolsCmd) Usage() string {
-	return "api-test symbols -save"
+	return "api-test symbols \n"
 }
 
 func (a *SymbolsCmd) SetFlags(set *flag.FlagSet) {
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *SymbolsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/common/symbols"), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

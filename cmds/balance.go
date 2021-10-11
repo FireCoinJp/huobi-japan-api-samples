@@ -14,7 +14,6 @@ import (
 )
 
 type BalanceCmd struct {
-	isSave bool
 }
 
 func (a *BalanceCmd) Name() string {
@@ -26,11 +25,10 @@ func (a *BalanceCmd) Synopsis() string {
 }
 
 func (a *BalanceCmd) Usage() string {
-	return "api-test balance -save"
+	return "api-test balance \n"
 }
 
 func (a *BalanceCmd) SetFlags(set *flag.FlagSet) {
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *BalanceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -41,6 +39,6 @@ func (a *BalanceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inter
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

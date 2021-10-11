@@ -19,7 +19,6 @@ import (
 type BatchcancelCmd struct {
 	orderIds       string
 	clientOrderIds string
-	isSave         bool
 }
 
 func (a *BatchcancelCmd) Name() string {
@@ -31,13 +30,12 @@ func (a *BatchcancelCmd) Synopsis() string {
 }
 
 func (a *BatchcancelCmd) Usage() string {
-	return "api-test BatchcancelCmd -save"
+	return "api-test batchcancel \n"
 }
 
 func (a *BatchcancelCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.orderIds, "order-ids", "", "注文番号リスト")
 	set.StringVar(&a.clientOrderIds, "client-order-ids", "", "ユーザ定義された注文番号")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *BatchcancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -64,6 +62,6 @@ func (a *BatchcancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...i
 	if err != nil {
 		panic(err)
 	}
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

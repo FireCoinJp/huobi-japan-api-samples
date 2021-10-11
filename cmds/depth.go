@@ -16,7 +16,6 @@ import (
 type DepthCmd struct {
 	symbol   string
 	stepType string
-	isSave   bool
 }
 
 func (a *DepthCmd) Name() string {
@@ -28,13 +27,12 @@ func (a *DepthCmd) Synopsis() string {
 }
 
 func (a *DepthCmd) Usage() string {
-	return "api-test DepthCmd -save"
+	return "api-test depth \n"
 }
 
 func (a *DepthCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア, 例えば btcjpy")
 	set.StringVar(&a.stepType, "type", "step4", "グルーピングレベル, [step0, step1, step2, step3, step4, step5]")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *DepthCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -46,6 +44,6 @@ func (a *DepthCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/depth")+"?"+param.Encode(), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

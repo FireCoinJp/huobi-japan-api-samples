@@ -13,7 +13,6 @@ import (
 )
 
 type CurrencysCmd struct {
-	isSave bool
 }
 
 func (a *CurrencysCmd) Name() string {
@@ -25,17 +24,16 @@ func (a *CurrencysCmd) Synopsis() string {
 }
 
 func (a *CurrencysCmd) Usage() string {
-	return "api-test currencys -save"
+	return "api-test currencys \n"
 }
 
 func (a *CurrencysCmd) SetFlags(set *flag.FlagSet) {
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *CurrencysCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
 	h := api.New(config.Cfg)
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/v1/common/currencys"), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

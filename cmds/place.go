@@ -21,7 +21,6 @@ type PlaceCmd struct {
 	source   string
 	symbol   string
 	steptype string
-	isSave   bool
 }
 
 func (a *PlaceCmd) Name() string {
@@ -33,7 +32,7 @@ func (a *PlaceCmd) Synopsis() string {
 }
 
 func (a *PlaceCmd) Usage() string {
-	return "api-test PlaceCmd -save"
+	return "api-test place \n"
 }
 
 func (a *PlaceCmd) SetFlags(set *flag.FlagSet) {
@@ -42,7 +41,6 @@ func (a *PlaceCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.source, "source", "api", "注文のソース, default: api")
 	set.StringVar(&a.symbol, "symbol", "trxjpy", "取引通貨ペア")
 	set.StringVar(&a.steptype, "type", "buy-limit", "注文タイプ,buy-market：成行買い,sell-market：成行売り,buy-limit：指値買い,sell-limit：指値売り,buy-ioc：IOC買い注文,sell-ioc：IOC売り注文,buy-limit-maker,sell-limit-maker")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *PlaceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -64,6 +62,6 @@ func (a *PlaceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

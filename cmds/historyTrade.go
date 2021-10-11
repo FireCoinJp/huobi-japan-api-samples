@@ -16,7 +16,6 @@ import (
 type HistoryTradeCmd struct {
 	symbol string
 	size   string
-	isSave bool
 }
 
 func (a *HistoryTradeCmd) Name() string {
@@ -28,13 +27,12 @@ func (a *HistoryTradeCmd) Synopsis() string {
 }
 
 func (a *HistoryTradeCmd) Usage() string {
-	return "api-test HistoryTradeCmd -save"
+	return "api-test historytrade \n"
 }
 
 func (a *HistoryTradeCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア, 例えば btcjpy")
 	set.StringVar(&a.size, "size", "2", "sデータサイズ, Range: {1, 2000}")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *HistoryTradeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -46,6 +44,6 @@ func (a *HistoryTradeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/history/trade")+"?"+param.Encode(), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

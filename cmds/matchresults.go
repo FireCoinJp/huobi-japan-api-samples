@@ -14,7 +14,6 @@ import (
 )
 
 type MatchresultsCmd struct {
-	isSave  bool
 	orderId string
 }
 
@@ -27,12 +26,11 @@ func (a *MatchresultsCmd) Synopsis() string {
 }
 
 func (a *MatchresultsCmd) Usage() string {
-	return "api-test order -save"
+	return "api-test matchresults \n"
 }
 
 func (a *MatchresultsCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.orderId, "order_id", "375977348044411", "パスに記載された注文ID")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *MatchresultsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -43,6 +41,6 @@ func (a *MatchresultsCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

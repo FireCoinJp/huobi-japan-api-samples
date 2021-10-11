@@ -22,8 +22,6 @@ type GetOrderCmd struct {
 	from      string
 	direct    string
 	size      string
-
-	isSave bool
 }
 
 func (a *GetOrderCmd) Name() string {
@@ -35,7 +33,7 @@ func (a *GetOrderCmd) Synopsis() string {
 }
 
 func (a *GetOrderCmd) Usage() string {
-	return "api-test GetOrderCmd -save"
+	return "api-test getOrder \n"
 }
 
 func (a *GetOrderCmd) SetFlags(set *flag.FlagSet) {
@@ -48,7 +46,6 @@ func (a *GetOrderCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.from, "from", "", "開始照会ID, 注文約定記録ID（最大值）")
 	set.StringVar(&a.direct, "direct", "next", "照会方向,約定IDの新着順 default: next, Range: {'prev', 'next'}")
 	set.StringVar(&a.size, "size", "10", "記録数, default:100, max: 100")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *GetOrderCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -78,6 +75,6 @@ func (a *GetOrderCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...inte
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

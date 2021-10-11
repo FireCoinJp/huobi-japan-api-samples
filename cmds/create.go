@@ -1,6 +1,6 @@
 package cmds
 
-// 注文実行
+// 暗号資産の出金申請
 
 import (
 	"bytes"
@@ -21,7 +21,6 @@ type CreateCmd struct {
 	currency string
 	fee      string
 	addr_tag string
-	isSave   bool
 }
 
 func (a *CreateCmd) Name() string {
@@ -33,16 +32,15 @@ func (a *CreateCmd) Synopsis() string {
 }
 
 func (a *CreateCmd) Usage() string {
-	return "api-test CreateCmd -save"
+	return "api-test create \n"
 }
 
 func (a *CreateCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.address, "address", "rGdHd9Re5KPsM2SukJ9wsoXwmkt5n2vHP1", "出金アドレス")
+	set.StringVar(&a.address, "address", "", "出金アドレス")
 	set.StringVar(&a.amount, "amount", "0.6", "出金数量")
 	set.StringVar(&a.currency, "currency", "xrp", "通貨種別")
 	set.StringVar(&a.fee, "fee", "0.1", "送金手数料")
-	set.StringVar(&a.addr_tag, "addr_tag", "127373", "暗号資産アドレスの共有tag，xrp")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
+	set.StringVar(&a.addr_tag, "addr_tag", "", "暗号資産アドレスの共有tag，xrp")
 }
 
 func (a *CreateCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -63,6 +61,6 @@ func (a *CreateCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interf
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

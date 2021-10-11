@@ -17,7 +17,6 @@ type KLineCmd struct {
 	symbol string
 	period string
 	size   string
-	isSave bool
 }
 
 func (a *KLineCmd) Name() string {
@@ -29,14 +28,13 @@ func (a *KLineCmd) Synopsis() string {
 }
 
 func (a *KLineCmd) Usage() string {
-	return "api-test KLineCmd -save"
+	return "api-test kline \n"
 }
 
 func (a *KLineCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア - btceth")
 	set.StringVar(&a.period, "period", "1day", "チャートタイプ")
-	set.StringVar(&a.size, "size", "20", "サイズ - default=150 max=2000")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
+	set.StringVar(&a.size, "size", "20", "サイズ - default=150 max=2000 ")
 }
 
 func (a *KLineCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -49,6 +47,6 @@ func (a *KLineCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interfa
 
 	req, _ := http.NewRequest(http.MethodGet, h.Url("/market/history/kline")+"?"+param.Encode(), nil)
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

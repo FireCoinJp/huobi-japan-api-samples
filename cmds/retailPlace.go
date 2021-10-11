@@ -1,6 +1,6 @@
 package cmds
 
-// 注文実行
+// 販売所での注文
 
 import (
 	"bytes"
@@ -23,7 +23,6 @@ type RetailPlaceCmd struct {
 	price         string
 	clientOrderId string
 	cashAmount    string
-	isSave        bool
 }
 
 func (a *RetailPlaceCmd) Name() string {
@@ -35,7 +34,7 @@ func (a *RetailPlaceCmd) Synopsis() string {
 }
 
 func (a *RetailPlaceCmd) Usage() string {
-	return "api-test RetailPlaceCmd -save"
+	return "api-test retailPlace \n"
 }
 
 func (a *RetailPlaceCmd) SetFlags(set *flag.FlagSet) {
@@ -46,7 +45,6 @@ func (a *RetailPlaceCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.price, "price", "9.5", "取引価格, decimal(36,18)")
 	set.StringVar(&a.clientOrderId, "client_order_id", "", "クライアントカスタマイズID")
 	set.StringVar(&a.cashAmount, "cash_amount", "", "現金金額, decimal(36,18)")
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *RetailPlaceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -71,6 +69,6 @@ func (a *RetailPlaceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...i
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }

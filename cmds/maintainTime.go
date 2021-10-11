@@ -13,7 +13,6 @@ import (
 )
 
 type MaintainTimeCmd struct {
-	isSave bool
 }
 
 func (a *MaintainTimeCmd) Name() string {
@@ -25,11 +24,10 @@ func (a *MaintainTimeCmd) Synopsis() string {
 }
 
 func (a *MaintainTimeCmd) Usage() string {
-	return "api-test MaintainTimeCmd -save"
+	return "api-test maintainTime \n"
 }
 
 func (a *MaintainTimeCmd) SetFlags(set *flag.FlagSet) {
-	set.BoolVar(&a.isSave, "save", false, "write to json")
 }
 
 func (a *MaintainTimeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
@@ -41,6 +39,6 @@ func (a *MaintainTimeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...
 		panic(err)
 	}
 
-	apiDo(req, a.isSave)
+	h.Process(req)
 	return 0
 }
