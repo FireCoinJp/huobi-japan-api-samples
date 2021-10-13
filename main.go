@@ -57,6 +57,8 @@ func main() {
 	subcommands.Register(&cmds.OrderlistCmd{}, "販売所関連")
 	subcommands.Register(&cmds.MaintainTimeCmd{}, "販売所関連")
 
+	subcommands.Register(&cmds.WsKLineCmd{}, "ローソク足 データ")
+
 	flag.Parse()
 	ctx := context.Background()
 	os.Exit(int(subcommands.Execute(ctx)))
