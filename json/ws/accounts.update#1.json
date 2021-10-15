@@ -1,0 +1,14 @@
+{
+  "action": "push",
+  "ch": "accounts.update#1",
+  "data": {
+    "accountId": 12698099,
+    "accountType": "trade",
+    "available": "25.8557589676516165",
+    "balance": "25.8557589676516165",
+    "changeTime": null,
+    "changeType": null,
+    "currency": "xrp",
+    "seqNum": 61624
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "ch": "market.ethbtc.bbo",
+  "tick": {
+    "ask": 0.06368,
+    "askSize": 0.08,
+    "bid": 0.063674,
+    "bidSize": 0.0018,
+    "quoteTime": 1634292438755,
+    "seqId": 118361166176,
+    "symbol": "ethbtc"
+  },
+  "ts": 1634292438756
+}

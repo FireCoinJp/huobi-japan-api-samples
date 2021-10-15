@@ -34,14 +34,12 @@ func (a *WsTickerCmd) SetFlags(set *flag.FlagSet) {
 }
 
 func (a *WsTickerCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
-	w := ws.NewBuilder()
 	channel := fmt.Sprintf("market.%s.trade.detail", a.symbol)
-
-	sub := &wsRequest.PublicMarketBody{
+	sub := &wsRequest.PublicRequest{
 		Sub:       channel,
 		Id:        "id1",
-		IsPrivate: false,
 	}
-	w.New(sub, config.Cfg)
+	w := ws.NewBuilder(config.Cfg, sub).Build()
+	w.Run(config.Cfg.Timeout)
 	return 0
 }

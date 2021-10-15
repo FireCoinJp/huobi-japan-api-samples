@@ -71,16 +71,17 @@ func (c Client) Do(req *http.Request, handler HandlerResponse) error {
 }
 
 func (c Client) Process(req *http.Request) {
-	err := c.Do(req, PrintMsg)
+	err := c.Do(req, printMsg)
 	if c.config.Save {
-		err = c.Do(req, SaveMsg)
+		err = c.Do(req, saveMsg)
 	}
 	if err != nil {
 		panic(err)
 	}
 }
 
-var PrintMsg = func(rep *http.Response) error {
+// handle response functions
+func printMsg(rep *http.Response) error {
 	var iv interface{}
 	err := json.NewDecoder(rep.Body).Decode(&iv)
 	if err != nil {
@@ -91,7 +92,7 @@ var PrintMsg = func(rep *http.Response) error {
 	return enc.Encode(iv)
 }
 
-var SaveMsg = func(rep *http.Response) error {
+func saveMsg(rep *http.Response) error {
 	var iv interface{}
 
 	err := json.NewDecoder(rep.Body).Decode(&iv)
