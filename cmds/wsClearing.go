@@ -36,15 +36,12 @@ func (a *WsClearingCmd) SetFlags(set *flag.FlagSet) {
 }
 
 func (a *WsClearingCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
-	w := ws.NewBuilder()
 	channel := fmt.Sprintf("trade.clearing#%s#%s", a.symbol, a.mode)
-
-	sub := &wsRequest.PrivateOrderBody{
-		Action:    "sub",
-		Ch:        channel,
-		IsPrivate: true,
+	sub := &wsRequest.PrivateRequest{
+		Action: "sub",
+		Ch:     channel,
 	}
-	w.New(sub, config.Cfg)
-
+	w := ws.NewBuilder(config.Cfg, sub).Build()
+	w.Run(config.Cfg.Timeout)
 	return 0
 }

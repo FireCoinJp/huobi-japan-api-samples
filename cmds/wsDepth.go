@@ -36,14 +36,12 @@ func (a *WsDepthCmd) SetFlags(set *flag.FlagSet) {
 }
 
 func (a *WsDepthCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
-	w := ws.NewBuilder()
 	channel := fmt.Sprintf("market.%s.depth.%s", a.symbol, a.depthType)
-
-	sub := &wsRequest.PublicMarketBody{
+	sub := &wsRequest.PublicRequest{
 		Sub:       channel,
 		Id:        "id1",
-		IsPrivate: false,
 	}
-	w.New(sub, config.Cfg)
+	w := ws.NewBuilder(config.Cfg, sub).Build()
+	w.Run(config.Cfg.Timeout)
 	return 0
 }

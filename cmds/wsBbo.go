@@ -34,15 +34,13 @@ func (a *WsBboCmd) SetFlags(set *flag.FlagSet) {
 }
 
 func (a *WsBboCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
-	w := ws.NewBuilder()
 	channel := fmt.Sprintf("market.%s.bbo", a.symbol)
-
-	sub := &wsRequest.PublicMarketBody{
+	sub := &wsRequest.PublicRequest{
 		Sub:       channel,
 		Id:        "id1",
-		IsPrivate: true,
 	}
-	w.New(sub, config.Cfg)
+	w := ws.NewBuilder(config.Cfg, sub).Build()
+	w.Run(config.Cfg.Timeout)
 
 	return 0
 }

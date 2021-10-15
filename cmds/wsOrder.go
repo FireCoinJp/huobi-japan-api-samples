@@ -34,15 +34,12 @@ func (a *WsOrderCmd) SetFlags(set *flag.FlagSet) {
 }
 
 func (a *WsOrderCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
-	w := ws.NewBuilder()
 	channel := fmt.Sprintf("orders#%s", a.symbol)
-
-	sub := &wsRequest.PrivateOrderBody{
+	sub := &wsRequest.PrivateRequest{
 		Action:    "sub",
 		Ch:        channel,
-		IsPrivate: true,
 	}
-	w.New(sub, config.Cfg)
-
+	w := ws.NewBuilder(config.Cfg, sub).Build()
+	w.Run(config.Cfg.Timeout)
 	return 0
 }

@@ -2,17 +2,19 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"go.uber.org/config"
 )
 
 type (
 	Config struct {
-		AccessKey string `yaml:"access_key"`
-		SecretKey string `yaml:"secret_key"`
-		AccountID string `yaml:"account_id"`
-		Host      string `yaml:"host"`
-		Save      bool   `yaml:"save"`
+		AccessKey string        `yaml:"access_key"`
+		SecretKey string        `yaml:"secret_key"`
+		AccountID string        `yaml:"account_id"`
+		Host      string        `yaml:"host"`
+		Save      bool          `yaml:"save"`
+		Timeout   time.Duration `yaml:"sleep"`
 	}
 )
 
