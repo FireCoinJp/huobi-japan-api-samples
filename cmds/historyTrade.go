@@ -32,7 +32,7 @@ func (a *HistoryTradeCmd) Usage() string {
 
 func (a *HistoryTradeCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.symbol, "symbol", "btcjpy", "取引ペア, 例えば btcjpy")
-	set.StringVar(&a.size, "size", "2", "sデータサイズ, Range: {1, 2000}")
+	set.StringVar(&a.size, "size", "2", "データサイズ, Range: {1, 2000}")
 }
 
 func (a *HistoryTradeCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {

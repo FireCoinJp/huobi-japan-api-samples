@@ -71,9 +71,11 @@ func (c Client) Do(req *http.Request, handler HandlerResponse) error {
 }
 
 func (c Client) Process(req *http.Request) {
-	err := c.Do(req, printMsg)
+	var err error
 	if c.config.Save {
 		err = c.Do(req, saveMsg)
+	} else {
+		err = c.Do(req, printMsg)
 	}
 	if err != nil {
 		panic(err)

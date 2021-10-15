@@ -34,8 +34,8 @@ func (a *BatchcancelCmd) Usage() string {
 }
 
 func (a *BatchcancelCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.orderIds, "order-ids", "", "注文番号リスト")
-	set.StringVar(&a.clientOrderIds, "client-order-ids", "", "ユーザ定義された注文番号")
+	set.StringVar(&a.orderIds, "order_ids", "", "注文番号リスト")
+	set.StringVar(&a.clientOrderIds, "client_order_ids", "", "ユーザ定義された注文番号")
 }
 
 func (a *BatchcancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {

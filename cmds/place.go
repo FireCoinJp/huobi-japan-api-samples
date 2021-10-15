@@ -40,7 +40,7 @@ func (a *PlaceCmd) SetFlags(set *flag.FlagSet) {
 	set.StringVar(&a.price, "price", "9.5", "指値の注文価格")
 	set.StringVar(&a.source, "source", "api", "注文のソース, default: api")
 	set.StringVar(&a.symbol, "symbol", "trxjpy", "取引通貨ペア")
-	set.StringVar(&a.steptype, "type", "buy-limit", "注文タイプ,buy-market：成行買い,sell-market：成行売り,buy-limit：指値買い,sell-limit：指値売り,buy-ioc：IOC買い注文,sell-ioc：IOC売り注文,buy-limit-maker,sell-limit-maker")
+	set.StringVar(&a.steptype, "type", "buy_limit", "注文タイプ,buy-market：成行買い,sell-market：成行売り,buy-limit：指値買い,sell-limit：指値売り,buy-ioc：IOC買い注文,sell-ioc：IOC売り注文,buy-limit-maker,sell-limit-maker")
 }
 
 func (a *PlaceCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
