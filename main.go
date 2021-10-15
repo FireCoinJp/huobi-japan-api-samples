@@ -57,6 +57,16 @@ func main() {
 	subcommands.Register(&cmds.OrderlistCmd{}, "販売所関連")
 	subcommands.Register(&cmds.MaintainTimeCmd{}, "販売所関連")
 
+	subcommands.Register(&cmds.WsKLineCmd{}, "Websocket (Public)")
+	subcommands.Register(&cmds.WsDepthCmd{}, "Websocket (Public)")
+	subcommands.Register(&cmds.WsBboCmd{}, "Websocket (Public)")
+	subcommands.Register(&cmds.WsTickerCmd{}, "Websocket (Public)")
+	subcommands.Register(&cmds.WsMarketDetialCmd{}, "Websocket (Public)")
+
+	subcommands.Register(&cmds.WsOrderCmd{}, "Websocket (Private)")
+	subcommands.Register(&cmds.WsClearingCmd{}, "Websocket (Private)")
+	subcommands.Register(&cmds.WsAccountsCmd{}, "Websocket (Private)")
+
 	flag.Parse()
 	ctx := context.Background()
 	os.Exit(int(subcommands.Execute(ctx)))
