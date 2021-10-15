@@ -14,7 +14,7 @@ type (
 		AccountID string        `yaml:"account_id"`
 		Host      string        `yaml:"host"`
 		Save      bool          `yaml:"save"`
-		Timeout   time.Duration `yaml:"sleep"`
+		Timeout   time.Duration `yaml:"timeout"`
 	}
 )
 
