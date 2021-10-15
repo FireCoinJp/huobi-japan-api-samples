@@ -5,8 +5,10 @@ package cmds
 import (
 	"context"
 	"flag"
+	"fmt"
 	"huobi-japan-api-samples/config"
 	"huobi-japan-api-samples/core/ws"
+	"huobi-japan-api-samples/data/wsRequest"
 
 	"github.com/google/subcommands"
 )
@@ -29,16 +31,19 @@ func (a *WsKLineCmd) Usage() string {
 }
 
 func (a *WsKLineCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.symbol, "symbol", "btcusdt", "取引ペア - btceth")
+	set.StringVar(&a.symbol, "symbol", "ethbtc", "取引ペア - btceth")
 	set.StringVar(&a.period, "period", "1min", "チャートタイプ")
 }
 
 func (a *WsKLineCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {
+	w := ws.NewBuilder()
+	channel := fmt.Sprintf("market.%s.kline.%s", a.symbol, a.period)
 
-	urlpath := "wss://api.huobi.pro/ws"
-	sub := []string{`{"id": "id1", "sub": "market.` + a.symbol + `.kline.` + a.period + `"}`}
-
-	ws.NewBuilder().New(sub, urlpath, *config.Cfg)
-
+	sub := &wsRequest.PublicMarketBody{
+		Sub:       channel,
+		Id:        "id1",
+		IsPrivate: false,
+	}
+	w.New(sub, config.Cfg)
 	return 0
 }

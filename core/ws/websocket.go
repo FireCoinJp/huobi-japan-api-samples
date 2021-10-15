@@ -4,12 +4,17 @@ import (
 	"bytes"
 	"compress/gzip"
 	"context"
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"huobi-japan-api-samples/config"
+	"huobi-japan-api-samples/data/wsRequest"
 	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -131,32 +136,67 @@ func (b *WsBuilder) Build(ctx context.Context, cancel context.CancelFunc) *WsCli
 	return client
 }
 
-func (b *WsBuilder) New(sub []string, url string, c config.Config) *WsClient {
+func (b *WsBuilder) New(isub wsRequest.ISubscribe, c *config.Config) *WsClient {
 	ctx, cancel := context.WithCancel(context.Background())
-	w := b.URL(url).
-		Subs(sub).
-		Dialer(websocket.DefaultDialer).
-		Build(ctx, cancel)
+	w := b.URL(Url(c.Host, isub.GetIsPrivate())). // TODO
+							Subs(isub.ToBody()).
+							Dialer(websocket.DefaultDialer).
+							Build(ctx, cancel)
 
 	allmsg := make([]interface{}, 0)
 
 	w.MessageFunc = func(msg []byte) error {
 		if strings.Contains(string(msg), "ping") {
 			pong := strings.Replace(string(msg), "ping", "pong", 1)
-			logger.Info("pong", pong)
+			fmt.Println("pong", pong)
 			return w.WriteMessage(websocket.TextMessage, []byte(pong))
 		}
+
 		m := make(map[string]interface{})
-		allmsg = append(allmsg, m)
 		err := json.Unmarshal([]byte(msg), &m)
+		allmsg = append(allmsg, m)
 		if err != nil {
 			fmt.Println(err)
 		}
 		enc := json.NewEncoder(os.Stdout)
 		enc.SetIndent("", "  ")
-		logger.Info("[ws] receive message", enc.Encode(m))
+		fmt.Println("[ws] receive message", enc.Encode(m))
+
+		if c.Save {
+			SaveWsMsg(allmsg, isub.GetPath())
+		}
 
 		return nil
+	}
+	if isub.GetIsPrivate() {
+		w.AfterConnectedFunc = func() error {
+			authParams := url.Values{}
+			utc := time.Now().UTC().Format("2006-01-02T15:04:05")
+			authParams.Set("accessKey", c.AccessKey)
+			authParams.Set("signatureMethod", "HmacSHA256")
+			authParams.Set("signatureVersion", "2.1")
+			authParams.Set("timestamp", utc)
+			host := "api-cloud.huobi.co.jp"
+			path := "/ws/v2"
+			s := fmt.Sprintf("GET\n%s\n%s\n%s", host, path, authParams.Encode())
+			signature := hmac256(s, c.SecretKey)
+			param := wsRequest.Param{
+				AuthType:         "api",
+				AccessKey:        c.AccessKey,
+				SignatureMethod:  "HmacSHA256",
+				SignatureVersion: "2.1",
+				Timestamp:        utc,
+				Signature:        signature,
+			}
+			auth := wsRequest.AuthJson{
+				Action: "req",
+				Ch:     "auth",
+				Params: param,
+			}
+
+			authBody, _ := json.Marshal(auth)
+			return w.WriteMessage(websocket.TextMessage, authBody)
+		}
 	}
 
 	err := w.Connect()
@@ -166,18 +206,29 @@ func (b *WsBuilder) New(sub []string, url string, c config.Config) *WsClient {
 	go w.ReceiveMessage()
 
 	go func() {
-		time.Sleep(2 * time.Second)
+		time.Sleep(200 * time.Second)
 		cancel()
 	}()
-
 	select {
 	case <-ctx.Done():
 		logger.Info("exit timeout", time.Now().Format("2006-01-02 15:04:05"))
-		if c.Save {
-			SaveWsMsg(allmsg)
-		}
-		return w
 	}
+
+	return nil
+}
+
+func Url(path string, isPrivate bool) string {
+	if isPrivate {
+		return "wss://" + path + "/ws/v2"
+	} else {
+		return "wss://" + path + "/ws"
+	}
+}
+
+func hmac256(base string, key string) string {
+	h := hmac.New(sha256.New, []byte(key))
+	h.Write([]byte(base))
+	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }
 
 func DefaultUncompressFunc(data []byte) ([]byte, error) {
@@ -195,20 +246,21 @@ func DumpResponse(resp *http.Response, body bool) {
 	}
 
 	d, _ := httputil.DumpResponse(resp, body)
-	logger.Info("[ws] response:", string(d))
+	fmt.Println("[ws] response:", string(d))
 }
 
 func SystemErrorFunc(err error) {
-	logger.Error("[ws] system error", err.Error())
+	fmt.Println("[ws] system error", err.Error())
 }
 
 func DefaultMessageFunc(msg []byte) error {
-	logger.Info("[ws] receive message", string(msg))
+	fmt.Println("[ws] receive message", string(msg))
 	return nil
 }
 
 func DefaultAfterConnected() error {
-	logger.Info("[ws] connect success.", time.Now().Format("2006-01-02 15:04:05"))
+	fmt.Println("[ws] connect success.", time.Now().Format("2006-01-02 15:04:05"))
+
 	return nil
 }
 
@@ -230,6 +282,7 @@ func (w *WsClient) Connect() error {
 	if err != nil {
 		return err
 	}
+	time.Sleep(1 * time.Second)
 
 	if len(w.config.Subs) > 0 {
 		for _, s := range w.config.Subs {
@@ -260,7 +313,7 @@ func (w *WsClient) Reconnect() error {
 			w.SystemErrorFunc(errors.Wrap(err, fmt.Sprintf("[ws] websocket reconnect fail, retry[%d]", retry)))
 			continue
 		} else {
-			logger.Info("[ws] retry", retry)
+			fmt.Println("[ws] retry", retry)
 			break
 		}
 	}
@@ -273,7 +326,7 @@ func (w *WsClient) Close() {
 	if err != nil {
 		w.SystemErrorFunc(errors.Wrapf(err, "[ws] [%s] close websocket error", w.config.WsUrl))
 	} else {
-		logger.Info("[ws] close websocket success.", nil)
+		fmt.Println("[ws] close websocket success.", nil)
 	}
 	time.Sleep(time.Second)
 	w.cancel()
@@ -299,7 +352,7 @@ func (w *WsClient) ReceiveMessage() {
 		if w.config.readDeadLineTime > 0 {
 			err = w.conn.SetReadDeadline(time.Now().Add(w.config.readDeadLineTime))
 			if err != nil {
-				logger.Warn("set readDeadLine error", err)
+				fmt.Println("set readDeadLine error", err)
 			}
 		}
 
@@ -326,9 +379,9 @@ func (w *WsClient) ReceiveMessage() {
 		case websocket.CloseGoingAway:
 			w.SystemErrorFunc(errors.Wrap(fmt.Errorf("%s", string(msg)), "[ws] goaway message"))
 		case websocket.PingMessage:
-			logger.Info("[ws] receive ping", string(msg))
+			fmt.Println("[ws] receive ping", string(msg))
 		case websocket.PongMessage:
-			logger.Info("[ws] receive pong", string(msg))
+			fmt.Println("[ws] receive pong", string(msg))
 			//case -1: // possibly is noFrame
 			//default:
 			//	logger.Error(fmt.Sprintf("[ws][%s] error websocket messageType = %d", w.config.WsUrl, messageType), msg)
@@ -349,21 +402,9 @@ func (w WsClient) Do(msg []byte, handler HandlerResponse) error {
 	return nil
 }
 
-var PrintWsMsg = func(msg []byte) error {
-	m := make(map[string]interface{})
-	err := json.Unmarshal([]byte(msg), &m)
-	if err != nil {
-		fmt.Println(err)
-	}
-	enc := json.NewEncoder(os.Stdout)
-	enc.SetIndent("", "  ")
+var SaveWsMsg = func(allmsg []interface{}, path string) error {
 
-	return enc.Encode(m)
-}
-
-var SaveWsMsg = func(allmsg []interface{}) error {
-
-	fn := "./json/ws/111.json"
+	fn := "./json/ws/" + path + ".json"
 	dir := filepath.Dir(fn)
 
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
