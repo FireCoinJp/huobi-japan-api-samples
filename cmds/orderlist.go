@@ -67,10 +67,10 @@ func (a *OrderlistCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...int
 		param.Add("from", a.from)
 	}
 	if a.base_currency != "" {
-		param.Add("start_date", a.base_currency)
+		param.Add("base_currency", a.base_currency)
 	}
 	if a.quote_currency != "" {
-		param.Add("end_date", a.quote_currency)
+		param.Add("quote_currency", a.quote_currency)
 	}
 	if a.ordertype != "" {
 		param.Add("types", a.ordertype)
