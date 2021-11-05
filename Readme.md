@@ -19,7 +19,7 @@ setting:
   save: false
   timeout: 10s
 ```
-​	3.access_key和secret_key取自huobi.co.jp个人账户内，在火币日本登陆个人账号后点击https://www.huobi.co.jp/ja-jp/user/api/链接，作成一个有读取、提现、交易的权限密钥，作成完成时的弹框内的公钥为access_key，密钥为secret_key，请复制公钥和密钥的值到config.yaml内对应的access_key和secret_key处。
+​	3.access_key和secret_key取自huobi.co.jp个人账户内，在火币日本登陆个人账号后点击 https://www.huobi.co.jp/ja-jp/user/api/ 链接，作成一个有读取、提现、交易的权限密钥，作成完成时的弹框内的公钥为access_key，密钥为secret_key，请复制公钥和密钥的值到config.yaml内对应的access_key和secret_key处。
 
 ​	4.account_id为用户账户ID，在access_key和secret_key填写完成的前提下，取值方法为在Terminal中输入`go run main.go accounts`并运行。在save值为false的情况下，在Terminal可以看到以下数据，id的值就是当前账号的account_id。在save值为ture的情况下，json目录下会生成一个accounts.json文件，打开文件会看到以下数据，id的值就是当前账号的account_id。请复制id的值到config.yaml内对应的account_id处。
 
@@ -356,16 +356,16 @@ func (w *Client) handleAuth() error {
 ```bash
 .
 
-├── Makefile 				// 编译规则
-├── Readme.md				// 说明文档
+├── Makefile 			// 编译规则
+├── Readme.md			// 说明文档
 ├── api-test  			// 可执行文件
-├── cmds    				// 运行代码
-├── config					// 配置
+├── cmds    			// 运行代码
+├── config			// 配置
 ├── config.yaml			// 配置文件
-├── core						// Library
-├── data						// 结构体存储位置
-├── go.mod					// 包依赖
-├── go.sum					// 包依赖
-├── json						// response生成的.json文件的存储位置
+├── core			// Library
+├── data			// 结构体存储位置
+├── go.mod			// 包依赖
+├── go.sum			// 包依赖
+├── json			// response生成的.json文件的存储位置
 └── main.go					
 ```
