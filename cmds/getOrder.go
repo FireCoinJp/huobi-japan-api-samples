@@ -37,8 +37,8 @@ func (a *GetOrderCmd) Usage() string {
 }
 
 func (a *GetOrderCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.symbol, "symbol", "trxjp", "取引ペア, [btcjpy, bchbtc,...]")
-	set.StringVar(&a.states, "states", "filled", "オーダーのタイプの組み合わせ照会，区切り記号は','を使用。[submitted 提出済み, partial-filled 部分約定, partial-canceled 部分約定キャンセル, filled 完全約定, canceled キャンセル済み]")
+	set.StringVar(&a.symbol, "symbol", "trxjpy", "取引ペア, [btcjpy, bchbtc,...]")
+	set.StringVar(&a.states, "states", "submitted", "オーダーのタイプの組み合わせ照会，区切り記号は','を使用。[submitted 提出済み, partial-filled 部分約定, partial-canceled 部分約定キャンセル, filled 完全約定, canceled キャンセル済み]")
 
 	set.StringVar(&a.types, "types", "", "オーダータイプの組み合わせ照会，カンマ区切り, [buy-market：成り行き買い, sell-market：成り行き売り, buy-limit：指値買い, sell-limit：指値売り, buy-ioc：IOC買い注文, sell-ioc：IOC売り注文]")
 	set.StringVar(&a.starttime, "start_time", "", "クエリの開始時間。時間形式はミリ秒単位のUTC時間です。 注文トランザクション時間によるクエリ,値の範囲は[（（end-time）– 48h）、（end-time）]、最大クエリウィンドウは48時間、ウィンドウシフト範囲は過去120日です。")
