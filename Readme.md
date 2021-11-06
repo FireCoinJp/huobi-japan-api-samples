@@ -267,14 +267,14 @@ func (w *Client) handleAuth() error {
 $ tree -L 1 
 
 ├── Makefile            # 默认命令集合
-├── Readme.md      # 说明文档
-├── api-test             # 可执行文件
-├── cmds                 # 运行代码
-├── config               # 配置定义
+├── Readme.md           # 说明文档
+├── api-test            # 可执行文件
+├── cmds                # 运行代码
+├── config              # 配置定义
 ├── config.yaml.sample  # 配置文件(需要用户自己生成)
 ├── core                # Library
 ├── data                # 数据结构定义
 ├── json                # 保存结果
-└── main.go         # 主函数	
+└── main.go             # 主函数	
 ```
 
