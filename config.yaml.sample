@@ -1,0 +1,7 @@
+setting:
+  access_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  secret_key: xxxxxxxxxxxxxxxxxxxxxxxxxx
+  account_id: 1234567890
+  host: api-cloud.huobi.co.jp
+  save: false
+  timeout: 10s

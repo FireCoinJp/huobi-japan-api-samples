@@ -1,29 +1,62 @@
-## **Huobi Japan API Sample**
+# Huobi Japan API Sample
 
-Huobi Japan API 使用说明
+> Huobi Japan API 的演示用代码, 可以通过这个程序验证API的功能. 可以通过参考相关代码, 快速集成自动交易的程序. 
 
-[toc]
 
-### 使用前的配置要求
 
-​	1.在项目根目录创建config.yaml文件。
+[API DOC](https://api-doc.huobi.co.jp/#api)
 
-​	2.粘贴以下内容到config.yaml文件内。
+## 如何取得API Key
+
+> 登录后, 可以通过以下界面生成API密钥
+
+![image-20211106095122808](.asset/image-20211106095122808.png)
+
+
+## 如何创建程序
+
+> 可以通过以下命令创建不同OS的可执行命令
 
 ```bash
-setting:
-  access_key: 
-  secret_key: 
-  account_id: 
-  host: api-cloud.huobi.co.jp
-  save: false
-  timeout: 10s
+# clone code
+git clone git@github.com:FireCoinJp/huobi-japan-api-samples.git
+
+# mac
+$ go build -o api-test main.go
+
+# linux 
+$ GOOS=linux GOARCH=amd64 go build -o api-test main.go
+
+# windows
+$ GOOS=windows GOARCH=amd64 go build -o api-test main.go
 ```
-​	3.access_key和secret_key取自huobi.co.jp个人账户内，在火币日本登陆个人账号后点击 https://www.huobi.co.jp/ja-jp/user/api/ 链接，作成一个有读取、提现、交易的权限密钥，作成完成时的弹框内的公钥为access_key，密钥为secret_key，请复制公钥和密钥的值到config.yaml内对应的access_key和secret_key处。
 
-​	4.account_id为用户账户ID，在access_key和secret_key填写完成的前提下，取值方法为在Terminal中输入`go run main.go accounts`并运行。在save值为false的情况下，在Terminal可以看到以下数据，id的值就是当前账号的account_id。在save值为ture的情况下，json目录下会生成一个accounts.json文件，打开文件会看到以下数据，id的值就是当前账号的account_id。请复制id的值到config.yaml内对应的account_id处。
+## 如何配置
+
+> 在执行命令的相同文件夹中, 创建`config.yaml`文件, 并输入相关内容
+
+ 1. 在项目根目录创建config.yaml文件, 并记录相关内容
+
+ ```bash
+ $ mv config.yaml.sample config.yaml
+ $ vi config.yaml
+ 
+ setting:
+ 	access_key: xxxxxx          # 客户的访问密钥
+ 	secret_key: xxxxxx          # 客户的密钥
+ 	account_id: 12345678        # 调用accounts子命令可以得到
+ 	host: api-cloud.huobi.co.jp # 固定值
+ 	save: false                 # 是否保存结果文件
+ 	timeout: 10s                # WS持续时间, 默认时间10s
+ ```
+
+ 2. 如何取得account_id
+
+    > 需要在配置文件中填写用户密钥信息
 
 ```bash
+$ ./api-test accounts
+
 {
   "data": [
     {
@@ -37,44 +70,33 @@ setting:
 }
 ```
 
-​	5.save值的作用是判定是否保存程序运行后得到的数据，若填写值为ture，程序运行后会则会在json目录下生成相应的xxx.json文件且在Terminal不输出数据，若填写值为false，程序运行后则会在Terminal输出运行程序后的数据且json文件夹下不生成相应的xxx.json文件。
+## 如何执行
 
-​	6.timeout值的作用是控制websocket api的运行时间，若填写时间为10s，被执行的websocket程序则会在运行10s后停止。
-
-
-
-## 如何创建命令
-
+> 本程序为子命令模式, 使用方法如下
 
 
 ```bash
-# clone code
-git clone git@github.com:FireCoinJp/huobi-japan-api-samples.git
-
-$ cd 进入项目目录
-
-# mac
-
-go build -o api-test main.go
-
-# linux 
-
- GOOS=linux GOARCH=amd64 go build -o api-test main.go
-
-# windows
-
- GOOS=windows GOARCH=amd64 go build -o api-test main.go
-```
-
-
-
-### 命令说明
-
-
-```bash
-# 查询命令行
+# 查询命令列表
 
 $ ./api-test
+Usage: api-test <flags> <subcommand> <subcommand args>
+
+Subcommands:
+        commands         list all command names
+        flags            describe all known top-level flags
+        help             describe subcommands and their syntax
+
+Subcommands for Websocket (Private):
+        wsAccounts       資産変動
+        wsClearing       注文状態更新
+        wsOrder          注文データ
+
+Subcommands for Websocket (Public):
+        wsBbo            BBO
+        wsDepth          板情報
+        wsKline          ローソク足 データ
+        wsMarketDetail   マーケット概要
+        wsTicker         ティッカー
 
 Subcommands for アカウント関連:
         accounts         ユーザアカウント
@@ -113,259 +135,146 @@ Subcommands for 販売所関連:
         maintainTime     販売所メンテナンス時間
         orderlist        販売所注文履歴
         retailPlace      販売所での注文
+        wsDataSubscription  データ購読
 
-Subcommands for Websocket (Private):
-        wsAccounts       資産変動
-        wsClearing       注文状態更新
-        wsOrder          注文データ
-
-Subcommands for Websocket (Public):
-        wsBbo            BBO
-        wsDepth          板情報
-        wsKline          ローソク足 データ
-        wsMarketDetail   マーケット概要
-        wsTicker         ティッカー
    
    
-# 如需查询子命令参数
+# 查询子命令参数
 $ ./api-test help kline
+api-test kline 
+  -period string
+        チャートタイプ (default "1day")
+  -size string
+        サイズ - default=150 max=2000  (default "20")
+  -symbol string
+        取引ペア - btceth (default "btcjpy")
 
-```
-
-**例**
-
-​	2件btcjpy的取引履歴の取得步骤为
-
-​	在Terminal中输入 ./api-test historytrade -symbol btcjpy -size 2 
-
-​	返回值为
-```bash
-	{
-  "ch": "market.btcjpy.trade.detail",
+# 执行命令
+$ ./api-test kline -symbol btcjpy -size 2
+{
+  "ch": "market.btcjpy.kline.1day",
   "data": [
     {
-      "data": [
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043633540256e+26,
-          "price": 7116558,
-          "trade-id": 100029930874,
-          "ts": 1636010851910
-        },
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043633540256e+26,
-          "price": 7116661,
-          "trade-id": 100029930873,
-          "ts": 1636010851910
-        },
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043633540256e+26,
-          "price": 7116713,
-          "trade-id": 100029930872,
-          "ts": 1636010851910
-        },
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043633540256e+26,
-          "price": 7116777,
-          "trade-id": 100029930871,
-          "ts": 1636010851910
-        },
-        {
-          "amount": 0.00002,
-          "direction": "sell",
-          "id": 1.0102043633540256e+26,
-          "price": 7116858,
-          "trade-id": 100029930870,
-          "ts": 1636010851910
-        }
-      ],
-      "id": 101020436335,
-      "ts": 1636010851910
+      "amount": 2.6079233285649943,
+      "close": 6903272,
+      "count": 13332,
+      "high": 6958855,
+      "id": 1636128000,
+      "low": 6884737,
+      "open": 6893137,
+      "vol": 18044270.39024
     },
     {
-      "data": [
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043613940257e+26,
-          "price": 7116547,
-          "trade-id": 100029930869,
-          "ts": 1636010848886
-        },
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043613940257e+26,
-          "price": 7116611,
-          "trade-id": 100029930868,
-          "ts": 1636010848886
-        },
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043613940257e+26,
-          "price": 7116737,
-          "trade-id": 100029930867,
-          "ts": 1636010848886
-        },
-        {
-          "amount": 0.00001,
-          "direction": "sell",
-          "id": 1.0102043613940257e+26,
-          "price": 7116745,
-          "trade-id": 100029930866,
-          "ts": 1636010848886
-        },
-        {
-          "amount": 0.00002,
-          "direction": "sell",
-          "id": 1.0102043613940257e+26,
-          "price": 7116819,
-          "trade-id": 100029930865,
-          "ts": 1636010848886
-        }
-      ],
-      "id": 101020436139,
-      "ts": 1636010848886
+      "amount": 23.07694295966621,
+      "close": 6891578,
+      "count": 37439,
+      "high": 7189999,
+      "id": 1636041600,
+      "low": 6891578,
+      "open": 6938545,
+      "vol": 161380835.70746
     }
   ],
   "status": "ok",
-  "ts": 1636010866794
+  "ts": 1636157137864
 }
+
 ```
 
-​	在Terminal中输入 ./api-test help historytrade并执行，则会取得执行取引履歴の取得命令所需的全部参数及备注
-```bash
-api-test historytrade 
-  -size string
-        データサイズ, Range: {1, 2000} (default "2")
-  -symbol string
-        取引ペア, 例えば btcjpy (default "btcjpy")
-```
 
-### 验签逻辑
 
-##### 		http端
+## 验签逻辑 (API & WebSocket)
+
+> 为了确认用户身份和提高安全性, 访问私有API需要进行签名处理. 下面的代码可以解释签名逻辑.
+
++ Rest API
+
+	>  私有API访问前, 构造签名,并和原有参数一起访问API
 
 ```go
-# path : huobi-japan-api-samples/core/api/http.go 
-
+// file: core/api/http.go 
 func (c Client) Auth(req *http.Request) error {
-
     authParams := url.Values{}
-
+    // GET API contains request parameters, POST API only contains URI
     if req.Method == http.MethodGet {
-
         authParams, _ = url.ParseQuery(req.URL.RawQuery)
-
     }
 
+    // Add fixed parameters
     authParams.Set("AccessKeyId", c.config.AccessKey)
-
     authParams.Set("SignatureMethod", "HmacSHA256")
-
     authParams.Set("SignatureVersion", "2")
-
     authParams.Set("Timestamp", time.Now().UTC().Format("2006-01-02T15:04:05"))
-
+  
+    // make a signature
     s := fmt.Sprintf("%s\n%s\n%s\n%s", req.Method, req.URL.Host, req.URL.Path, authParams.Encode())
-
     signature := crypto.Hmac256(s, c.config.SecretKey)
-
     authParams.Set("Signature", signature)
-
     req.URL, _ = url.Parse(fmt.Sprintf("%s://%s%s?%s", req.URL.Scheme, req.URL.Host, req.URL.Path, authParams.Encode()))
-
+    
     req.Header.Set("Content-Type", "application/json")
-
     return nil
-
 }		
 ```
-##### 		websocket端
+
++ WebSocket
+
+  > 建立连接后, 发送签名命令, 以便可以订阅或调用websocket私有命令. 签名方法同Rest API
 
 ```go
-# path : huobi-japan-api-samples/core/ws/websocket.go 
-
+// file : core/ws/websocket.go 
 func (w *Client) handleAuth() error {
-
+    // add fixed parameters
     authParams := url.Values{}
-
     utc := time.Now().UTC().Format("2006-01-02T15:04:05")
-
     authParams.Set("accessKey", w.config.accessKey)
-
     authParams.Set("signatureMethod", "HmacSHA256")
-
     authParams.Set("signatureVersion", "2.1")
-
     authParams.Set("timestamp", utc)
-
+    
+    // make a signature
     host := "api-cloud.huobi.co.jp"
-
     path := "/ws/v2"
-
     s := fmt.Sprintf("GET\n%s\n%s\n%s", host, path, authParams.Encode())
-
     signature := crypto.Hmac256(s, w.config.secretKey)
 
+    // build request json
     param := wsRequest.Param{
-
         AuthType:         "api",
-
         AccessKey:        w.config.accessKey,
-
         SignatureMethod:  "HmacSHA256",
-
         SignatureVersion: "2.1",
-
         Timestamp:        utc,
-
         Signature:        signature,
-
     }
-
     auth := wsRequest.AuthJson{
-
         Action: "req",
-
         Ch:     "auth",
-
         Params: param,
-
     }
-
-
-
     authBody, _ := json.Marshal(auth)
-
+    
+    // send command
     return w.WriteMessage(websocket.TextMessage, authBody)
-
 }
 ```
 
 
-### 目录结构说明
-```bash
-.
+## 目录结构
 
-├── Makefile 			// 编译规则
-├── Readme.md			// 说明文档
-├── api-test  			// 可执行文件
-├── cmds    			// 运行代码
-├── config			// 配置
-├── config.yaml			// 配置文件
-├── core			// Library
-├── data			// 结构体存储位置
-├── go.mod			// 包依赖
-├── go.sum			// 包依赖
-├── json			// response生成的.json文件的存储位置
-└── main.go					
+```bash
+# 本项目的目录结构
+$ tree -L 1 
+
+├── Makefile 			      # 默认命令集合
+├── Readme.md			      # 说明文档
+├── api-test  		      # 可执行文件
+├── cmds    			      # 运行代码
+├── config			        # 配置定义
+├── config.yaml.sample  # 配置文件(需要用户自己生成)
+├── core			          # Library
+├── data			          # 数据结构定义
+├── json			          # 保存结果
+└── main.go				      # 主函数	
 ```
+
