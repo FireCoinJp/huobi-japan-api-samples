@@ -30,7 +30,7 @@ func (a *CancelCmd) Usage() string {
 }
 
 func (a *CancelCmd) SetFlags(set *flag.FlagSet) {
-	set.StringVar(&a.withdrawId, "withdraw_id", "75705660", "出金ID，pathの中に記入")
+	set.StringVar(&a.withdrawId, "withdraw_id", "", "出金ID，pathの中に記入")
 }
 
 func (a *CancelCmd) Execute(ctx context.Context, f *flag.FlagSet, args ...interface{}) subcommands.ExitStatus {

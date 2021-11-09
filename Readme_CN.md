@@ -1,23 +1,21 @@
 # Huobi Japan API Sample
 
-> Huobi Japan API のサンプルコード。このサンプルを使ってAPIの機能を検証することができます。
->
-> 関連コードを参照することで、自動取引機能を実現できるプログラムになります。
+> Huobi Japan API 的演示用代码, 可以通过这个程序验证API的功能. 可以通过参考相关代码, 快速集成自动交易的程序. 
 
 
 
 [API DOC](https://api-doc.huobi.co.jp/#api)
 
-## API Keyの取得方法
+## 如何取得API Key
 
-> ログイン後、下図の通りAPIの秘密鍵を取得することができます。
+> 登录后, 可以通过以下界面生成API密钥
 
 ![image-20211106095122808](.asset/image-20211106095122808.png)
 
 
-## プログラムの作成について
+## 如何创建程序
 
-> 以下のコマンドによって、各OSに適用のコマンドを作成できます。
+> 可以通过以下命令创建不同OS的可执行命令
 
 ```bash
 # clone code
@@ -33,28 +31,28 @@ $ GOOS=linux GOARCH=amd64 go build -o api-test main.go
 $ GOOS=windows GOARCH=amd64 go build -o api-test main.go
 ```
 
-## 開発環境の構築について
+## 如何配置
 
-> コマンドを実行するフォルダーの中で、`config.yaml`ファイルを作成し、下記の通りコマンドを実行してください。
+> 在执行命令的相同文件夹中, 创建`config.yaml`文件, 并输入相关内容
 
- 1. ルートディレクトリでconfig.yamlファイルを作成し、下記内容を入力します。
+ 1. 在项目根目录创建config.yaml文件, 并记录相关内容
 
  ```bash
  $ mv config.yaml.sample config.yaml
  $ vi config.yaml
  
  setting:
- 	access_key: xxxxxx          # 公開鍵
- 	secret_key: xxxxxx          # 秘密鍵
- 	account_id: 12345678        # accountsサブコマンドを使って取得できる
- 	host: api-cloud.huobi.co.jp # 固定値
- 	save: false                 # 結果を出力するか
- 	timeout: 10s                # WSの実行する時間（デフォルト値は10秒）
+ 	access_key: xxxxxx          # 客户的访问密钥
+ 	secret_key: xxxxxx          # 客户的密钥
+ 	account_id: 12345678        # 调用accounts子命令可以得到
+ 	host: api-cloud.huobi.co.jp # 固定值
+ 	save: false                 # 是否保存结果文件
+ 	timeout: 10s                # WS持续时间, 默认时间10s
  ```
 
- 2. account_idの取得方法
+ 2. 如何取得account_id
 
-    > 構成ファイルにて秘密鍵を記入する必要があります。
+    > 需要在配置文件中填写用户密钥信息
 
 ```bash
 $ ./api-test accounts
@@ -72,13 +70,13 @@ $ ./api-test accounts
 }
 ```
 
-## 実行について
+## 如何执行
 
-> 本プログラムはサブコマンドモードです。使い方は下記の通りになります。
+> 本程序为子命令模式, 使用方法如下
 
 
 ```bash
-# コマンドリストを参照
+# 查询命令列表
 
 $ ./api-test
 Usage: api-test <flags> <subcommand> <subcommand args>
@@ -141,7 +139,7 @@ Subcommands for 販売所関連:
 
    
    
-# サブコマンドパラメータを参照
+# 查询子命令参数
 $ ./api-test help kline
 api-test kline 
   -period string
@@ -151,7 +149,7 @@ api-test kline
   -symbol string
         取引ペア - btceth (default "btcjpy")
 
-# コマンドを実行
+# 执行命令
 $ ./api-test kline -symbol btcjpy -size 2
 {
   "ch": "market.btcjpy.kline.1day",
@@ -185,13 +183,13 @@ $ ./api-test kline -symbol btcjpy -size 2
 
 
 
-## 認証ロジック (API & WebSocket)
+## 验签逻辑 (API & WebSocket)
 
-> ユーザ認証とセキュリティのため、プライベートAPIをアクセスする際には署名が必要となります。下記コマンドにて署名に関する手順を説明します。
+> 为了确认用户身份和提高安全性, 访问私有API需要进行签名处理. 下面的代码可以解释签名逻辑.
 
 + Rest API
 
-	>  プライベートAPIをアクセスする前に署名を作成し、既存パラメータでAPIをアクセスします
+	>  私有API访问前, 构造签名,并和原有参数一起访问API
 
 ```go
 // file: core/api/http.go 
@@ -221,7 +219,7 @@ func (c Client) Auth(req *http.Request) error {
 
 + WebSocket
 
-  > 接続後、署名コマンドを実行し、websocketプライベートコマンドを購読や起動します。署名の手順はRest APIと同様になります。
+  > 建立连接后, 发送签名命令, 以便可以订阅或调用websocket私有命令. 签名方法同Rest API
 
 ```go
 // file : core/ws/websocket.go 
@@ -262,21 +260,21 @@ func (w *Client) handleAuth() error {
 ```
 
 
-## ディレクトリ構造
+## 目录结构
 
 ```bash
-# 本プロジェクトのディレクトリ構造
+# 本项目的目录结构
 $ tree -L 1 
 
-├── Makefile            # デフォルトコマンド集
-├── Readme.md           # 説明書
-├── api-test            # 実行可能ファイル
-├── cmds                # コマンド
-├── config              # 構成定義
-├── config.yaml.sample  # 構成ファイル（ユーザで生成する必要がある）
+├── Makefile            # 默认命令集合
+├── Readme.md           # 说明文档
+├── api-test            # 可执行文件
+├── cmds                # 运行代码
+├── config              # 配置定义
+├── config.yaml.sample  # 配置文件(需要用户自己生成)
 ├── core                # Library
-├── data                # データ構造の定義
-├── json                # 結果の保存
-└── main.go             # main関数
+├── data                # 数据结构定义
+├── json                # 保存结果
+└── main.go             # 主函数	
 ```
 
