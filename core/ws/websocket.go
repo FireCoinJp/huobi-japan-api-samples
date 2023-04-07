@@ -124,7 +124,7 @@ func (w *Client) handleAuth() error {
 	authParams.Set("signatureMethod", "HmacSHA256")
 	authParams.Set("signatureVersion", "2.1")
 	authParams.Set("timestamp", utc)
-	host := "api-cloud.huobi.co.jp"
+	host := "api-cloud.bittrade.co.jp"
 	path := "/ws/v2"
 	s := fmt.Sprintf("GET\n%s\n%s\n%s", host, path, authParams.Encode())
 	signature := crypto.Hmac256(s, w.config.secretKey)

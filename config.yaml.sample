@@ -2,6 +2,6 @@ setting:
   access_key: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
   secret_key: xxxxxxxxxxxxxxxxxxxxxxxxxx
   account_id: 1234567890
-  host: api-cloud.huobi.co.jp
+  host: api-cloud.bittrade.co.jp
   save: false
   timeout: 10s
