@@ -4,7 +4,7 @@
 
 
 
-[API DOC](https://api-doc.huobi.co.jp/#api)
+[API DOC](https://api-doc.bittrade.co.jp/#api)
 
 ## 如何取得API Key
 
@@ -45,7 +45,7 @@ $ GOOS=windows GOARCH=amd64 go build -o api-test main.go
  	access_key: xxxxxx          # 客户的访问密钥
  	secret_key: xxxxxx          # 客户的密钥
  	account_id: 12345678        # 调用accounts子命令可以得到
- 	host: api-cloud.huobi.co.jp # 固定值
+ 	host: api-cloud.bittrade.co.jp # 固定值
  	save: false                 # 是否保存结果文件
  	timeout: 10s                # WS持续时间, 默认时间10s
  ```
@@ -233,7 +233,7 @@ func (w *Client) handleAuth() error {
     authParams.Set("timestamp", utc)
     
     // make a signature
-    host := "api-cloud.huobi.co.jp"
+    host := "api-cloud.bittrade.co.jp"
     path := "/ws/v2"
     s := fmt.Sprintf("GET\n%s\n%s\n%s", host, path, authParams.Encode())
     signature := crypto.Hmac256(s, w.config.secretKey)
